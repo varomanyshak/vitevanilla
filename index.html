@@ -4,10 +4,66 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Ricardo's Website</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
+    <div id="app">
+      <div class="auth-container" id="auth-container">
+        <div class="form-container sign-up-container">
+          <form id="signUpForm" action="#" method="post">
+            <h1>Create Account</h1>
+            <input name="username" value="vasyl" type="text" placeholder="Username" required />
+            <input name="password" value="vasyl" type="password" placeholder="Password" required />
+            <button onclick="trySignUp(event)">Sign Up</button>
+          </form>
+        </div>
+        <div class="form-container sign-in-container">
+          <form id="signInForm" action="/" method="post">
+            <h1>Sign in</h1>
+            <input name="username" value="vasyl" type="text" placeholder="Username" required />
+            <input name="password" value="vasyl" type="password" placeholder="Password" required />
+            <a href="#">Forgot your password?</a>
+            <button type="submit" onclick="trySignIn(event)">Sign In</button>
+          </form>
+        </div>
+        <div class="overlay-container">
+          <div class="overlay">
+            <div class="overlay-panel overlay-left">
+              <h1>Welcome Back!</h1>
+              <p>To keep connected with us please login with your personal info</p>
+              <button class="ghost" onclick="showSignIn()">Sign In</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+              <h1>Hello, Friend!</h1>
+              <p>Enter your personal details and start journey with us</p>
+              <button class="ghost" onClick="showSignUp()">Sign Up</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="main-container">
+        Available pages for you:
+        <ul id="menu-ul">
+        </ul>
+        <button class="" onClick="logout()">Logout</button>
+      </div>
+    </div>
+    <script type="module" src="/main.js" defer></script>
+    
+    <script type="module">
+      import {
+        showSignUp,
+        showSignIn,
+        trySignUp,
+        trySignIn,
+        logout
+      } from './functions.js';
+      window.showSignUp = showSignUp;
+      window.showSignIn = showSignIn;
+      window.trySignUp = trySignUp;
+      window.trySignIn = trySignIn;
+      window.logout = logout;
+    </script>
   </body>
 </html>
