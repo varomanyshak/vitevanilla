@@ -23,12 +23,10 @@ export function trySignUp (event){
     $.ajax({
         type: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            "Authorization": token
+            'Content-Type': 'application/json'
         },
         url: apiBaseUrl + '/User/addUser',
-        data: { username: username,
-             password: password },
+        data: JSON.stringify({username, password }),
         success: function (data) {
             console.log('data', data)
             Swal.fire({
@@ -63,6 +61,7 @@ export function trySignIn (event){
         url: apiBaseUrl + '/User/login',
         success: function (data) {
             token = data.token
+            console.log('data', data)
             token  = "Bearer " + token
             $.ajax({
                 type: "GET",
