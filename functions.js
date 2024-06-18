@@ -1,5 +1,5 @@
 const apiBaseUrl = 'https://aspnetclusters-175530-0.cloudclusters.net'
-const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImp0aSI6ImUyMDJlMWRkLWExMjUtNGYzMi05NDY5LWUzYzc5YmI0ODY0MiIsImlhdCI6MTcxODY2NjQyNywiaWQiOiI0IiwibmJmIjoxNzE4NjY2NDI3LCJleHAiOjE3MTg2NzAwMjcsImlzcyI6IkF1dGgiLCJhdWQiOiJBdXRoVXNlcnMifQ.L1bRqM19kmA09C0SH2qOcUKNb0BtvbbPwinRZubE-us'
+let token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImp0aSI6IjExYjM2YmNiLTkxZDYtNDIzMC05ZTVjLTVjOTZiN2UwNzFmMyIsImlhdCI6MTcxODczNDYxMCwiaWQiOiI0IiwibmJmIjoxNzE4NzM0NjEwLCJleHAiOjE3MTg3MzgyMTAsImlzcyI6IkF1dGgiLCJhdWQiOiJBdXRoVXNlcnMifQ.efqPuq_Oli-wJOpqyyWDTX9SM2FjqOrn5V_pCbbOBlY'
 const showSignUpButton = document.getElementById('showSignUp');
 const showSignInButton = document.getElementById('showSignIn');
 const authContainer = document.getElementById('auth-container');
@@ -27,7 +27,8 @@ export function trySignUp (event){
             "Authorization": token
         },
         url: apiBaseUrl + '/User/addUser',
-        data: { username, password },
+        data: { username: username,
+             password: password },
         success: function (data) {
             console.log('data', data)
             Swal.fire({
@@ -58,12 +59,11 @@ export function trySignIn (event){
         headers: {
             'Content-Type': 'application/json'
         },
-        data: { username, password },
+        data: JSON.stringify({ username, password }),
         url: apiBaseUrl + '/User/login',
         success: function (data) {
-            console.log('data', data)
-            token = JSON.parse(data.responseJSON).token
-
+            token = data.token
+            token  = "Bearer " + token
             $.ajax({
                 type: "GET",
                 headers: {
@@ -74,7 +74,7 @@ export function trySignIn (event){
                     xhr.setRequestHeader('Authorization', token);
                 },
                 url: apiBaseUrl + '/User/getUserWithPages',
-                data: { username },
+                data: { username: username },
                 success: function (data) {
                     appContainer.classList.add('logged-in')
                     accesses = data.accesses
