@@ -13,7 +13,7 @@ body {
 	flex-direction: column;
 	font-family: 'Montserrat', sans-serif;
 	height: 100vh;
-	margin: -20px 0 50px;
+	margin: 0px;
 }
 
 h1 {
@@ -45,16 +45,20 @@ a {
 }
 
 button {
-	border-radius: 20px;
+	border-radius: 8px;
 	border: 1px solid #FF4B2B;
 	background-color: #FF4B2B;
 	color: #FFFFFF;
 	font-size: 12px;
 	font-weight: bold;
-	padding: 12px 45px;
+	padding: 14px 45px;
+	margin: 0px 5px;
 	letter-spacing: 1px;
 	text-transform: uppercase;
 	transition: transform 80ms ease-in;
+}
+button:hover {
+	background-color: #ff6d4d;
 }
 
 button:active {
@@ -260,3 +264,75 @@ footer a {
     color: #3c97bf;
     text-decoration: none;
 }
+#loginedUsername {
+	font-size: 25px;
+	font-weight: bold;
+}
+#signin_btn {
+	margin-top: 10px;
+}
+/* Navbar container */
+.navbar {
+	background-color: #333;
+	font-family: Arial;
+	width: 100%;
+	position:absolute;
+	top: 0px;
+	justify-content: start;
+	padding: 3px 0px;
+  }
+  
+  /* Links inside the navbar */
+  .navbar a {
+	float: left;
+	font-size: 16px;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+  }
+  
+  /* The dropdown container */
+  .dropdown {
+	display: inline-block;
+  }
+  
+  /* Dropdown button */
+  .dropdown .dropbtn {
+	outline: none;
+	color: white;
+	padding: 14px 16px;
+	font-family: inherit; /* Important for vertical align on mobile phones */
+	margin: 0; /* Important for vertical align on mobile phones */
+  }
+  
+  /* Add a red background color to navbar links on hover */
+  /* .navbar a:hover, .dropdown:hover .dropbtn {
+	background-color: red;
+  } */
+   .dropdown .dropbtn {
+	
+   }
+  
+  /* Dropdown content (hidden by default) */
+  .dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	width: 300px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+  }
+  .dropdown-content button {
+	margin: 10px;
+	width: 280px;
+  }  
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {
+	display: block;
+  }
+  #signin_btn {
+	background-color: #f4424f;
+	border: white;
+  }
