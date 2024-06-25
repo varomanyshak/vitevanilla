@@ -336,3 +336,19 @@ footer a {
 	background-color: #f4424f;
 	border: white;
   }
+  .dropdown-content-s {
+	position: absolute;
+	display: none;
+	top: 0px;
+	left: 99%;
+	background-color: lightgray;
+	z-index: 5;
+	border-radius: 4px;
+  }
+  .dropdown-s:hover .dropdown-content-s {
+	display: block;
+  }
+  .dropdown-s {
+	position: relative;
+	padding: 10px;
+  }

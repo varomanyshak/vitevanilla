@@ -75,7 +75,79 @@ export function trySignIn (event){
                 data: { username: username },
                 success: function (dataR) {
                     appContainer.classList.add('logged-in')
-                    accesses = dataR
+                    // accesses = dataR
+                    accesses = [
+                      {
+                        "pageName": "Home",
+                        "pageId": 6,
+                        "userId": 1,
+                        "parentId": null,
+                        "internalUrl": "./Home.html"
+                      },
+                      {
+                        "pageName": "Customer",
+                        "pageId": 7,
+                        "userId": 1,
+                        "parentId": null,
+                        "internalUrl": "./Customer.html"
+                      },
+                      {
+                        "pageName": "TAG",
+                        "pageId": 8,
+                        "userId": 1,
+                        "parentId": 7,
+                        "internalUrl": "./dashboard/Customer/TAG.html"
+                      },
+                      {
+                        "pageName": "WooCommerce",
+                        "pageId": 9,
+                        "userId": 1,
+                        "parentId": 10,
+                        "internalUrl": "./Customer/WooCommerce.html"
+                      },
+                      {
+                        "pageName": "AwardsAtlanta",
+                        "pageId": 10,
+                        "userId": 1,
+                        "parentId": 7,
+                        "internalUrl": "./Customer/AwardsAtlanta.html"
+                      },
+                      {
+                        "pageName": "BCSI",
+                        "pageId": 11,
+                        "userId": 1,
+                        "parentId": 7,
+                        "internalUrl": "./Customer/BCSI.html"
+                      },
+                      {
+                        "pageName": "Admin",
+                        "pageId": 12,
+                        "userId": 1,
+                        "parentId": null,
+                        "internalUrl": "./Admin.html"
+                      },
+                      {
+                        "pageName": "AkzoNop",
+                        "pageId": 13,
+                        "userId": 1,
+                        "parentId": 7,
+                        "internalUrl": "./Cuustomer/AkzoNop"
+                      },
+                      {
+                        "pageName": "Approve User",
+                        "pageId": 14,
+                        "userId": 1,
+                        "parentId": 12,
+                        "internalUrl": "./Admin/ApproveUser.html"
+                      },
+                      {
+                        "pageName": "View Logins",
+                        "pageId": 15,
+                        "userId": 1,
+                        "parentId": 12,
+                        "internalUrl": "./Admin/ViewLogins.html"
+                      }
+                    ];
                     let mItems = '';
                     mItems += `<div class="navbar">`
                     mItems += generateMenu(accesses);
@@ -150,6 +222,14 @@ const generateMenu = (items) => {
                   menuHTML += `<div class="dropdown"> <button class="dropbtn">${item.pageName}</button><div class="dropdown-content">`
                   children.map(child => {
                       menuHTML += `<button onClick="document.querySelector('iframe').src = '${child.internalUrl.substring(1)}'">${child.pageName}</button>`;
+                      const subchilds = items.filter(sitem => sitem.parentId === child.pageId);
+                      if(subchilds.length > 0) {
+                        menuHTML += `<div class="dropdown-s"> <button class="dropbtn">${item.pageName}</button><div class="dropdown-content-s">`
+                        subchilds.map(subchild => {
+                          menuHTML += `<button onClick="document.querySelector('iframe').src = '${subchild.internalUrl.substring(1)}'">${subchild.pageName}</button>`;
+                        });
+                        menuHTML += '</div></div>';
+                      }
                     });
                     menuHTML += '</div></div>';
             } else {
