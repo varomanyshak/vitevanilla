@@ -75,85 +75,13 @@ export function trySignIn (event){
                 data: { username: username },
                 success: function (dataR) {
                     appContainer.classList.add('logged-in')
-                    // accesses = dataR
-                    accesses = [
-                      {
-                        "pageName": "Home",
-                        "pageId": 6,
-                        "userId": 1,
-                        "parentId": null,
-                        "internalUrl": "./Home.html"
-                      },
-                      {
-                        "pageName": "Customer",
-                        "pageId": 7,
-                        "userId": 1,
-                        "parentId": null,
-                        "internalUrl": "./Customer.html"
-                      },
-                      {
-                        "pageName": "TAG",
-                        "pageId": 8,
-                        "userId": 1,
-                        "parentId": 7,
-                        "internalUrl": "./dashboard/Customer/TAG.html"
-                      },
-                      {
-                        "pageName": "WooCommerce",
-                        "pageId": 9,
-                        "userId": 1,
-                        "parentId": 10,
-                        "internalUrl": "./Customer/WooCommerce.html"
-                      },
-                      {
-                        "pageName": "AwardsAtlanta",
-                        "pageId": 10,
-                        "userId": 1,
-                        "parentId": 7,
-                        "internalUrl": "./Customer/AwardsAtlanta.html"
-                      },
-                      {
-                        "pageName": "BCSI",
-                        "pageId": 11,
-                        "userId": 1,
-                        "parentId": 7,
-                        "internalUrl": "./Customer/BCSI.html"
-                      },
-                      {
-                        "pageName": "Admin",
-                        "pageId": 12,
-                        "userId": 1,
-                        "parentId": null,
-                        "internalUrl": "./Admin.html"
-                      },
-                      {
-                        "pageName": "AkzoNop",
-                        "pageId": 13,
-                        "userId": 1,
-                        "parentId": 7,
-                        "internalUrl": "./Cuustomer/AkzoNop"
-                      },
-                      {
-                        "pageName": "Approve User",
-                        "pageId": 14,
-                        "userId": 1,
-                        "parentId": 12,
-                        "internalUrl": "./Admin/ApproveUser.html"
-                      },
-                      {
-                        "pageName": "View Logins",
-                        "pageId": 15,
-                        "userId": 1,
-                        "parentId": 12,
-                        "internalUrl": "./Admin/ViewLogins.html"
-                      }
-                    ];
+                    accesses = dataR
                     let mItems = '';
                     mItems += `<div class="navbar">`
                     mItems += generateMenu(accesses);
                     mItems += '<button onClick="logout()" style="position: absolute; right: 10px">Logout</button></div>'
                     // document.getElementById('loginedUsername').innerHTML = data.username
-                    document.body.innerHTML = mItems + `<iframe style="width: 100vw; height: calc(100vh - 46px); margin-top: 46px" id="ift" src="/welcome.html"></iframe>`
+                    document.body.innerHTML = mItems + `<iframe style="width: 100vw; height: calc(100vh - 46px); margin-top: 46px" id="myIframe" src="/welcome.html"></iframe>`
                 }
             });
         },
@@ -221,23 +149,43 @@ const generateMenu = (items) => {
               if (children.length > 0) {
                   menuHTML += `<div class="dropdown"> <button class="dropbtn">${item.pageName}</button><div class="dropdown-content">`
                   children.map(child => {
-                      menuHTML += `<button onClick="document.querySelector('iframe').src = '${child.internalUrl.substring(1)}'">${child.pageName}</button>`;
+                      menuHTML += `<button onClick='changeIframeSrc("${child.internalUrl}")'>${child.pageName}</button>`;
                       const subchilds = items.filter(sitem => sitem.parentId === child.pageId);
                       if(subchilds.length > 0) {
-                        menuHTML += `<div class="dropdown-s"> <button class="dropbtn">${item.pageName}</button><div class="dropdown-content-s">`
+                        menuHTML += '<div class="dropdown-s"> <button class="dropbtn">'+
+                        item.pageName + '<svg style="float: right;transform: rotate(270deg)" aria-hidden="true" focusable="false" role="img" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg>' +
+                        '</button><div class="dropdown-content-s">'
                         subchilds.map(subchild => {
-                          menuHTML += `<button onClick="document.querySelector('iframe').src = '${subchild.internalUrl.substring(1)}'">${subchild.pageName}</button>`;
+                          menuHTML += `<button onClick='changeIframeSrc("${subchild.internalUrl}")'>${subchild.pageName}</button>`;
                         });
                         menuHTML += '</div></div>';
                       }
                     });
                     menuHTML += '</div></div>';
             } else {
-                menuHTML += `<button onClick="document.querySelector('iframe').src = '${item.internalUrl.substring(1)}'">${item.pageName}</button>`;
+                menuHTML += `<button onClick='changeIframeSrc("${item.internalUrl}")'>${item.pageName}</button>`;
             }
           }
         });
     }
     return menuHTML;
   }
+
+  // Function to change the src attribute of the iframe
+export function changeIframeSrc(newSrc) {
+  // Check if the target HTML URL is valid and accessible
+  fetch((window.location.href + newSrc.substring(2)).toString())
+    .then(response => {
+      if (response.ok) {
+        // If the URL is valid and accessible, change the src attribute of the iframe
+        document.getElementById("myIframe").src = newSrc;
+      } else {
+        // If the URL is not valid or accessible, handle the situation (e.g., display an error message)
+        alert("The target HTML URL is not accessible.");
+      }
+    })
+    .catch(error => {
+      alert("An error occurred while checking the target HTML URL:", error);
+    });
+}
 
