@@ -149,16 +149,18 @@ const generateMenu = (items) => {
               if (children.length > 0) {
                   menuHTML += `<div class="dropdown"> <button class="dropbtn">${item.pageName}</button><div class="dropdown-content">`
                   children.map(child => {
-                      menuHTML += `<button onClick='changeIframeSrc("${child.internalUrl}")'>${child.pageName}</button>`;
+                      // menuHTML += `<button onClick='changeIframeSrc("${child.internalUrl}")'>${child.pageName}</button>`;
                       const subchilds = items.filter(sitem => sitem.parentId === child.pageId);
                       if(subchilds.length > 0) {
                         menuHTML += '<div class="dropdown-s"> <button class="dropbtn">'+
-                        item.pageName + '<svg style="float: right;transform: rotate(270deg)" aria-hidden="true" focusable="false" role="img" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg>' +
+                        child.pageName + '<svg style="float: right;transform: rotate(270deg)" aria-hidden="true" focusable="false" role="img" class="octicon octicon-triangle-down" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg>' +
                         '</button><div class="dropdown-content-s">'
                         subchilds.map(subchild => {
                           menuHTML += `<button onClick='changeIframeSrc("${subchild.internalUrl}")'>${subchild.pageName}</button>`;
                         });
                         menuHTML += '</div></div>';
+                      } else {
+                        menuHTML += `<button onClick='changeIframeSrc("${child.internalUrl}")'>${child.pageName}</button>`;
                       }
                     });
                     menuHTML += '</div></div>';
