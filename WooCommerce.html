@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woo Commerce Dashboard</title>
+    <script type="module" src="/main.js"></script>
+    <script src="/woo.js"></script>
+    <script>
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        var signcheck = getCookie("signcheck");
+        if(signcheck == 'checked'){
+
+        }
+        else{
+            window.location="/";
+        }
+    </script>
+</head>
+<body>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="message">Please wait while we get this information for you...</div>
+</div>
+
+<div id="wrapper">
+    <div id="wooData" class="space-and-format-woo-div">
+        <select id="wooStores" name="stores">
+            <option value="">Select A Woo Store</option>
+            <option value="hvr">Hidden Valley Ranch</option>
+            <option value="psl">Pinesol</option>
+            <option value="kf">Kingsford</option>
+        </select>
+        <input id="wooOrderNumber" type="text" name="order_number" placeholder="Woo Order">
+        <button id="btnLookupWooInfo" type="submit">Lookup Info</button>
+    </div>
+    <table id="dataTable"></table>
+</div>
+
+
+</body>
+</html>

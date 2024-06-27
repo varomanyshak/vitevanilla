@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AkzoNop</title>
+    <script type="module" src="/main.js"></script>
+    <script>
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        var signcheck = getCookie("signcheck");
+        if(signcheck == 'checked'){
+
+        }
+        else{
+            window.location="/";
+        }
+    </script>
+</head>
+<body>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="message">Please wait while we get this information for you...</div>
+</div>
+
+<div id="akzDiv" class="akzDiv">
+    <label htmlFor="orderNumber">Input An Akzo Order Number:</label>
+    <input type="text" id="orderNumber" name="orderNumber" />
+    <button id="btnGetkzOrderNumber" type="button" >Lookup</button>
+</div>
+
+<table id="dtAkz"></table>
+</body>
+</html>

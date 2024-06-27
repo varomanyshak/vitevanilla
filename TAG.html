@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAG Dashboard</title>
+    <script type="module" src="main.js"></script>
+    <script>
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        var signcheck = getCookie("signcheck");
+        if(signcheck == 'checked'){
+
+        }
+        else{
+            window.location="/";
+        }
+    </script>
+</head>
+<body>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="message">Please wait while we get this information for you...</div>
+</div>
+
+<div class="containerTAG">
+    <div id="tagDiv" class="tagDiv">
+        <label htmlFor="poNumber">Input A PO Number:</label>
+        <input type="text" id="poNumber" name="poNumber" />
+        <button id="btnGetTagData" type="button" class="btn btn-primary">Lookup</button>
+    </div>
+    <table id="dtTAGTotals"></table>
+    <table id="dtTAG" class="display"></table>
+</div>
+
+<div class="modal fade" id="mdlTAG" tabindex="1" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-lg" id="tagModalDialog">
+        <div class="modal-content" id="tagModalContent">
+            <div class="modal-header" id="tagModalHeader">
+                <h5 class="modal-title mx-auto">Received Payload</h5>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+            </div>
+            <div class="modal-footer" id="tagModalFooter">
+                <button type="button" id="btnDownloadJson" class="btn btn-primary">Download JSON</button>
+                <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlConfirmResend" tabindex="-1" aria-labelledby="confirmationModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Are you sure?</h5>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="inputAPIResult">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnClose" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" id="btnResubmit" class="btn btn-primary">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

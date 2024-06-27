@@ -1,21 +1,248 @@
-import Swal from 'sweetalert2'
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import $ from 'jquery'
+import Swal from 'sweetalert2'
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import jsZip from 'jszip';
+import DataTable from 'datatables.net';
+import 'datatables.net-dt/css/dataTables.dataTables.css';
+import 'datatables.net-buttons-dt';
+import 'datatables.net-buttons/js/buttons.html5';
+import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css'
+import { Modal } from "bootstrap";
+DataTable.Buttons.jszip(jsZip);
 
+const dbApiBaseUrl = 'https://api-drummond.com/';
 const apiBaseUrl = 'https://aspnetclusters-175530-0.cloudclusters.net'
 const showSignUpButton = document.getElementById('showSignUp');
 const showSignInButton = document.getElementById('showSignIn');
 const authContainer = document.getElementById('auth-container');
 const appContainer = document.getElementById('app');
 let accesses = [];
+var modal;
+let resubmitModal;
+let prettyData;
+let orderFieldTwo;
+let jsonPayload;
 
+$(document).ready(function() {
+    modal = new Modal($("#mdlTAG"));
+    modal.hide();
+    resubmitModal = new Modal($("#mdlConfirmResend"));
+    resubmitModal.hide();
+});
+
+$(document.body).on("click", "#mdlTAG #tagModalDialog #tagModalContent #tagModalFooter #btnDownloadJson", function(){
+    downloadJson();
+});
+function hide_modal_popup(){
+    $("body").removeClass("modal-open");
+    $(".modal-backdrop").fadeOut();
+    $(".modal").fadeOut();
+    $("body").removeAttr("style");
+}
+
+$(document.body).on("click", "#mdlTAG #tagModalDialog #tagModalContent #tagModalFooter #btnCloseModal", function(){
+    hide_modal_popup();
+});
+
+$(document.body).on("click", "#btnResubmit", function () {
+    repushTAGPayload();
+});
+
+$(document.body).on("click", "#btnClose", function(){
+    hide_modal_popup();
+});
+
+$(document.body).on("click", "#tagDiv #btnGetTagData", function(){
+    event.preventDefault();
+    getTagData();
+});
+async function repushTAGPayload() {
+    showLoadingOverlay();
+    btnClose.innerText = 'Close';
+    const url = dbApiBaseUrl + 'tag/warehouse-order';
+    const data = JSON.parse(jsonPayload);
+    prettyData = JSON.stringify(data, null, 2);
+    let options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: prettyData
+    };
+
+    fetch(url, options)
+        .then(response => response.json())
+        .then(data => {
+            const responseData = data;
+            document.getElementById('inputAPIResult').value = 'Api Response: ' + data;
+        })
+        .catch(error => {
+            showError('Error:', error);
+        });
+    hideLoadingOverlay();
+}
+function areAllNotEmpty(...variables) {
+    return variables.every(variable => variable !== '');
+}
+const showError = (message) => {
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+        confirmButtonText: 'OK'
+    });
+};
+function showLoadingOverlay() {
+    document.getElementById('loading-overlay').style.display = 'block';
+}
+function hideLoadingOverlay() {
+    document.getElementById('loading-overlay').style.display = 'none';
+}
+async function downloadJson() {
+    var blob = new Blob([prettyData], {type: 'application/json'});
+    var a = document.createElement('a');
+    a.href = window.URL.createObjectURL(blob);
+    a.download = orderFieldTwo + '.json';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+async function getTagData() {
+    let po = document.getElementById('poNumber').value;
+
+    if (!areAllNotEmpty(po)) {
+        showError('Please input a TAG PO Number.');
+    } else {
+        showLoadingOverlay();
+        try {
+            const response = await fetch(dbApiBaseUrl + `integrationsDashboard/TAGOrderLookup?ponumber=${po}`)
+            if (!response.ok) {
+                showError('Failed to fetch data');
+            }
+            const data = await response.json();
+            let receivedPayloads = data.length;
+
+            let postSuccess = data.reduce(function (count, obj) {
+                if (obj["propagoOrderNumber"] && obj["propagoOrderNumber"].trim() !== "") {
+                    count++;
+                }
+                return count;
+            }, 0);
+
+            let postFailures = receivedPayloads - postSuccess;
+
+            let totalsData = [
+                {"Metric": "Total Received Payloads", "Value": receivedPayloads},
+                {"Metric": "Count of Successful Posts", "Value": postSuccess},
+                {"Metric": "Count of Failed Posts", "Value": postFailures}
+            ];
+            $('#dtTAGTotals').DataTable({
+                data: totalsData,
+                columns: [
+                    {data: 'Metric'},
+                    {data: 'Value'}
+                ],
+                searching: false,
+                paging: false,
+                info: false
+            });
+
+            data.forEach(row => {
+                row.expandCollapseButton = '';
+            });
+            let table = $('#dtTAG').DataTable({
+                layout: {
+                    topEnd: {
+                        search: {return: true},
+                        buttons: [{
+                            extend: 'excelHtml5',
+                        }]
+                    }
+                },
+                data: data,
+                columns: [
+                    {data: 'expandCollapseButton', title: '', className: 'details-control', orderable: false},
+                    {data: 'id', title: 'id'},
+                    {data: 'propagoOrderNumber', title: 'Order Number'},
+                    {
+                        data: 'receivedDateTime',
+                        title: 'Received',
+                        render: function (data) {
+                            var date = new Date(data);
+                            var formattedDate = ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + "-" + date.getFullYear() + " " + ("0" + (date.getHours() % 12 || 12)).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + " " + (date.getHours() >= 12 ? 'PM' : 'AM');
+                            return formattedDate;
+                        }
+                    },
+                    {data: 'orderField2', title: 'Order Field 2'},
+                    {data: 'tagpoNumber', title: 'TAG PO Number'},
+                    {data: 'apiErrorMessage', title: 'Error Messsage'},
+                    {
+                        data: null,
+                        title: 'Resubmit Payload',
+                        defaultContent: '<button class="action-btn">Resend Payload</button>'
+                    }
+                ],
+                initComplete: function () {
+                    $('div.dt-layout-cell.dt-end').addClass('dt-tag-export-button')
+                }
+            });
+            $('#dtTAG').on('click', '.action-btn', function () {
+                var data = table.row($(this).parents('tr')).data();
+                let propagoOrderNumber = '';
+                let orderField2 = data.orderField2;
+                jsonPayload = data.receivedXml;
+                if (orderField2 !== '') {
+                    table.column(2).data().each(function (value, index) {
+                        if (value !== '') {
+                            propagoOrderNumber = value;
+                        }
+                    });
+                }
+
+                //if (propagoOrderNumber !== '') {
+                //    showError('Please review.  This Order Field 2 already exists in Propago -- ' + propagoOrderNumber);
+                //} else {
+                resubmitModal = new Modal($("#mdlConfirmResend"));
+                resubmitModal.show();
+                //}
+
+                //console.log('Button pressed for row with data:', data.orderField2);
+            });
+            $("#dtTAG").on('click', '.details-control', function () {
+                const row = table.row(this);
+                const rowData = table.row(this).data();
+                $('#mdlTAG .modal-body').empty();
+
+                if (typeof rowData === 'object') {
+                    orderFieldTwo = rowData.orderField2;
+                    const data = JSON.parse(rowData.receivedXml);
+                    prettyData = JSON.stringify(data, null, 2);
+                    $('#mdlTAG .modal-body').append('<pre>' + prettyData + '</pre>');
+                } else {
+                    $('#mdlTAG .modal-body').text(rowData);
+                }
+                modal = new Modal($("#mdlTAG"));
+                modal.show();
+            });
+
+            hideLoadingOverlay();
+            return data;
+        } catch (error) {
+            hideLoadingOverlay();
+            console.error('Error fetching data:', error);
+        }
+    }
+}
 export const showSignUp = () => {
     authContainer.classList.add('right-panel-active');
 }
-
 export function showSignIn () {
     authContainer.classList.remove('right-panel-active');
 }
-
 export function trySignUp (event){
     event.preventDefault();
     const username = document.getElementById('signUpForm').elements['username'].value;
@@ -31,7 +258,7 @@ export function trySignUp (event){
         success: function (data) {
             Swal.fire({
                 title: "Success",
-                text: "A new user has been registered successfully!",
+                text: "You are registered and pending approval!",
                 icon: "success"
             });
         },
@@ -45,13 +272,34 @@ export function trySignUp (event){
         }
     });
 }
-
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+function eraseCookie(name) {
+    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
 export function trySignIn (event){
     event.preventDefault();
     const username = document.getElementById('signInForm').elements['username'].value;
     const password = document.getElementById('signInForm').elements['password'].value;
 
-    
+
     $.ajax({
         type: "POST",
         headers: {
@@ -75,13 +323,14 @@ export function trySignIn (event){
                 data: { username: username },
                 success: function (dataR) {
                     appContainer.classList.add('logged-in')
+                    setCookie("signcheck","checked",7);
                     accesses = dataR
                     let mItems = '';
                     mItems += `<div class="navbar">`
                     mItems += generateMenu(accesses);
                     mItems += '<button onClick="logout()" style="position: absolute; right: 10px">Logout</button></div>'
                     // document.getElementById('loginedUsername').innerHTML = data.username
-                    document.body.innerHTML = mItems + `<iframe style="width: 100vw; height: calc(100vh - 46px); margin-top: 46px" id="myIframe" src="/welcome.html"></iframe>`
+                    document.body.innerHTML = mItems + `<iframe style="width: 100vw; height: calc(100vh - 46px); margin-top: 64px" id="myIframe" src="/welcome.html"></iframe>`
                 }
             });
         },
@@ -175,19 +424,17 @@ const generateMenu = (items) => {
 
   // Function to change the src attribute of the iframe
 export function changeIframeSrc(newSrc) {
-  // Check if the target HTML URL is valid and accessible
-  fetch((window.location.href + newSrc.substring(2)).toString())
-    .then(response => {
-      if (response.ok) {
-        // If the URL is valid and accessible, change the src attribute of the iframe
-        document.getElementById("myIframe").src = newSrc;
-      } else {
-        // If the URL is not valid or accessible, handle the situation (e.g., display an error message)
-        alert("The target HTML URL is not accessible.");
-      }
-    })
-    .catch(error => {
-      alert("An error occurred while checking the target HTML URL:", error);
-    });
+//   fetch((window.location.href + newSrc.substring(2)).toString())
+//     .then(response => {
+//       if (response.ok) {
+//         document.getElementById("myIframe").src = newSrc;
+//       } else {
+//         alert("The target HTML URL is not accessible.");
+//       }
+//     })
+//     .catch(error => {
+//       alert("An error occurred while checking the target HTML URL:", error);
+//         document.getElementById("myIframe").src = newSrc;
+//     });
+    document.getElementById("myIframe").src = newSrc;
 }
-

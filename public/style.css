@@ -1,0 +1,556 @@
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #f6f5f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: 'Montserrat', sans-serif;
+  height: 100vh;
+  margin: 0px;
+}
+
+h1 {
+  font-weight: bold;
+  margin: 0;
+}
+
+h2 {
+  text-align: center;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+span {
+  font-size: 12px;
+}
+
+a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 14px 45px;
+  margin: 0px 5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+button:hover {
+  background-color: #aaa4;
+}
+button.ghost:hover {
+	background-color: #ff6d4d;
+}
+button:active {
+  transform: scale(0.95);
+}
+
+button:focus {
+  outline: none;
+}
+
+button.ghost {
+  background-color: transparent;
+  border-color: #FFFFFF;
+}
+
+form {
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
+}
+
+input {
+  background-color: #eee;
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
+}
+
+.logged-in .auth-container {
+  display: none;
+}
+.main-container {
+  display: none;
+}
+.logged-in .main-container {
+  display: block;
+}
+
+.auth-container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+  0 10px 10px rgba(0,0,0,0.22);
+  position: relative;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+}
+
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.auth-container.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+}
+
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.auth-container.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%, 49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+
+  50%, 100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.auth-container.right-panel-active .overlay-container{
+  transform: translateX(-100%);
+}
+
+.overlay {
+  background: #FF416C;
+  background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
+  background: linear-gradient(to right, #FF4B2B, #FF416C);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: #FFFFFF;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.auth-container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlay-left {
+  transform: translateX(-20%);
+}
+
+.auth-container.right-panel-active .overlay-left {
+  transform: translateX(0);
+}
+
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.auth-container.right-panel-active .overlay-right {
+  transform: translateX(20%);
+}
+
+.social-container {
+  margin: 20px 0;
+}
+
+.social-container a {
+  border: 1px solid #DDDDDD;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  height: 40px;
+  width: 40px;
+}
+
+footer {
+  background-color: #222;
+  color: #fff;
+  font-size: 14px;
+  bottom: 0;
+  position: fixed;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 999;
+}
+
+footer p {
+  margin: 10px 0;
+}
+
+footer i {
+  color: red;
+}
+
+footer a {
+  color: #3c97bf;
+  text-decoration: none;
+}
+#signin_btn {
+  margin-top: 10px;
+}
+#signUpForm button {
+  background-color: #f4424f;
+}
+/* Navbar container */
+.navbar {
+  background-color: #333;
+  font-family: Arial;
+  width: 100%;
+  position:absolute;
+  top: 0px;
+  justify-content: left !important;
+  gap: 10px;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+  display: inline-block;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  outline: none;
+  padding: 14px 16px;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+/* .navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+} */
+.dropdown .dropbtn {
+
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  width: 300px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropdown-content button {
+  margin: 10px;
+  width: 280px;
+	color: black;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+#signin_btn {
+  background-color: #f4424f;
+  border: white;
+}
+.dropdown-content-s {
+	position: absolute;
+	display: none;
+	top: 0px;
+	left: 99%;
+	background-color: white;
+	z-index: 3;
+	border-radius: 4px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  }
+  .dropdown-s:hover .dropdown-content-s {
+	display: block;
+  }
+  .dropdown-s {
+	position: relative;
+	padding: 10px;
+  }
+/* Menu Fix */
+.navbar {
+
+}
+
+/*THIS IS CSS FOR TAG.HTML*/
+.containerTAG {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.tagDiv {
+	margin-top: -600px;
+	display: flex;
+	align-items: center;
+	padding: 10px;
+}
+
+.tagDiv label {
+	margin-right: 10px;
+}
+
+.tagDiv input[type="text"] {
+	flex: 1;
+	padding: 8px;
+	border: 1px solid #ccc;
+}
+
+.tagDiv button {
+	padding: 8px 12px;
+	border: 1px solid #ccc;
+	cursor: pointer;
+}
+
+.tagDiv {
+  border: 1px solid #000;
+  width: 525px;
+  margin: 50px auto 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tagDiv label,
+.tagDiv input,
+.tagDiv button {
+  margin: 0 10px;
+}
+
+#loading-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 16px;
+  color: #333;
+}
+
+#dtTAGTotals {
+  width: 300px !important;;
+}
+
+#dtTAG {
+  width: auto !important;
+}
+
+td.details-control {
+  background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+  cursor: pointer;
+}
+
+tr.shown td.details-control {
+  background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+}
+
+.modal {
+  max-width: 100%;
+}
+
+.modal-dialog {
+  width: auto;
+  margin: 1.75rem auto;
+}
+
+.modal-header-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fff;
+}
+
+.modal-footer {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+  margin: 1.75rem auto;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-body {
+  flex: 1;
+}
+
+
+#dtTAG_wrapper {
+  margin-top: 100px;
+}
+
+.dt-tag-export-button {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-end !important;
+}
+
+#mdlTAG .modal-header {
+  position: fixed;
+  background: white !important;
+  max-width: 800px;
+  width: 100%;
+  z-index: 10;
+}
+
+#mdlTAG .modal-body {
+  padding-top: 70px;
+}
+
+#mdlTAG .modal-footer {
+  background: white !important;
+}
+
+/*END OF TAG.HTML*/
+
+
+/* This CSS IS FOR ORDERCHECK.HTML*/
+.space-and-format-woo-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.space-and-format-woo-div select {
+  flex: 1;
+  margin-right: 5px;
+}
+.space-and-format-woo-div input {
+  flex: 1;
+  width: calc(50% - 5px);
+  margin-right: 5px;
+}
+.space-and-format-woo-div button {
+  flex: 2;
+  margin-left: 5px;
+}
+
+
+
+/* END OF ORDERCHECK.HTML */
